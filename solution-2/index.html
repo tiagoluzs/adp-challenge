@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>ADP - Developer Code Challenge</title>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2/dist/vue.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KyZXEAg3QhqLMpG8r+8fhAXLRk2vvoC2f3B09zVXn8CA5QIVfZOJ3BCsw2P0p/We" crossorigin="anonymous">
+  <link href="style.css" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <div class="">
+      <h1>ADP - Developer Code Challenge</h1>
+      <h4>Top five ice cream shops in Alpharetta</h4>
+      <div id="app">
+        <div class="loading" v-if="loading">Loading data ...</div>
+        <div class="alert alert-danger error" v-if="error">Can't fetch data. <br>Please run local API with <code>~# node api.js</code></div>
+        <ul class="shops">
+          <li v-for="(item, index) in shops">
+            <div class="card" style="width: 18rem;">
+              <div class="image-wrap">
+                <img v-bind:src="item.image_url" class="card-img-top" v-bind:alt="item.name">
+              </div>
+              <div class="card-body">
+                <h5 class="card-title name">{{ index + 1 }}. {{item.name}}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{item.address}}</h6>
+                <p class="card-text review">{{item.review.text}}<br><strong>{{item.review.name}}</strong></p>
+                <a v-bind:href="item.url" target="_blank" class="btn btn-primary">Details</a>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <script>
+    var app = new Vue({
+      el: '#app',
+      data: {
+        error: false,
+        loading: true,
+        shops: []
+      },
+      methods: {
+        getData: () => {
+          fetch("http://localhost:3000/icecream").then(response => {
+            return response.json();
+          }).then(data => {
+            app.error = false
+            app.shops = data
+            app.loading = false
+          }).catch(error => {
+            app.error = true
+            app.shops = []
+            app.loading = false
+          })
+        }
+      },
+      mounted() {
+        this.$nextTick(function() {
+          this.getData()
+        })
+      }
+    })
+  </script>
+</body>
+</html>

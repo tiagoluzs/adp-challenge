@@ -1,0 +1,38 @@
+ul {
+  list-style: none;
+}
+
+ul li {
+  list-style: none;
+  float: left;
+  margin-right: 10px;
+  margin-bottom: 10px;
+}
+
+ul li div.card {
+  min-height: 400px;
+}
+
+ul li div.card .image-wrap {
+  height: 178px;
+  overflow: hidden;
+  position: relative;
+}
+
+ul li div.card .image-wrap img {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  margin: auto;
+}
+
+ul li div.card .name {
+  height: 50px;
+}
+
+ul li div.card .review {
+  height: 150px;
+  overflow: hidden;
+}

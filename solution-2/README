@@ -1,0 +1,11 @@
+To run the API, please install npm packages:
+
+~# npm install
+
+Then, after completed:
+
+~# node api.js
+
+or 
+
+~# npm start

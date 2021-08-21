@@ -36,7 +36,8 @@ dataFetch('https://api.yelp.com/v3/businesses/search?location=Alpharetta, GA&rad
         alias: b.alias,
         image_url: b.image_url,
         name: b.name,
-        address: b.location.display_address.join(' - ')
+        address: b.location.display_address.join(' - '),
+        url: b.url
       }
     })
 
@@ -64,17 +65,15 @@ dataFetch('https://api.yelp.com/v3/businesses/search?location=Alpharetta, GA&rad
       console.log('\033[2J');
       console.log(chalk.white.bgRed(" ADP ") + " " + chalk.red.bgWhite(" Developer Code Challenge "))
       console.log("Top five ice cream shops in Alpharetta" + "\n")
-
+      
       businesses.forEach((item, i) => {
-
         console.log(chalk.white.bgBlue((i + 1) + " - " + item.name))
-        console.log(item.address)
-        console.log("Review: " + item.review.text + "(" + item.review.name + ")")
+        console.log(chalk.gray(item.address))
         console.log("\n")
-
+        console.log("Review: " + chalk.gray(item.review.text + "(" + item.review.name + ")"))
+        console.log("Details: " + chalk.gray(item.url))
+        console.log("\n")
       });
-
-
 
     }).catch((error) => {
       console.error("ERROR: Can't fetch reviews data", error)

@@ -1,0 +1,11 @@
+To run the script, please install npm packages:
+
+~# npm install
+
+Then, after completed:
+
+~# node index.js
+
+or 
+
+~# npm start

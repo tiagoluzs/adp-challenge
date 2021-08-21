@@ -46,7 +46,7 @@
             return response.json();
           }).then(data => {
             app.error = false
-            app.shops = data
+            app.shops = data.data
             app.loading = false
           }).catch(error => {
             app.error = true

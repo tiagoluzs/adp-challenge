@@ -1,12 +1,23 @@
 require('dotenv').config()
 const https = require('https');
 const express = require('express')
-var cors = require('cors')
+const morgan = require('morgan')
+const cors = require('cors')
 const app = express()
+
 app.use(cors())
+app.use(morgan('dev'))
 
-const port = 3000
 
+const port = process.env.PORT
+
+// memory cache
+let cache = {
+  last: null,
+  data: null,
+  enabled: process.env.CACHE_ENABLED == "true",
+  ttl: process.env.CACHE_TTL
+}
 
 let dataFetch = (endpoint) => {
   return new Promise((resolve, reject) => {
@@ -34,6 +45,16 @@ let dataFetch = (endpoint) => {
 }
 
 app.get('/icecream', (req, res) => {
+
+  let now = new Date().getTime();
+  if (cache.enabled && cache.last != null && (now - cache.last) < cache.ttl) {
+    return res.json({
+      data: cache.data,
+      last: now,
+      cached: true,
+      delay: new Date().getTime() - now
+    })
+  }
 
 
   dataFetch('https://api.yelp.com/v3/businesses/search?location=Alpharetta, GA&radius=5000&limit=5&sort_by=rating&categories=icecream')
@@ -70,17 +91,30 @@ app.get('/icecream', (req, res) => {
             }
           }
         }
+        if (cache.enabled) {
+          cache.data = businesses;
+          cache.last = now;
+        }
 
-        res.json(businesses);
+        res.json({
+          data: businesses,
+          last: now,
+          cached: false,
+          delay: new Date().getTime() - now
+        });
 
       }).catch((error) => {
-        res.status(500).json({error: true, errormsg: error});
+        res.status(500).json({
+          error: true,
+          errormsg: error
+        });
       });
     }).catch((error) => {
-      res.status(500).json({error: true, errormsg: error});
+      res.status(500).json({
+        error: true,
+        errormsg: error
+      });
     })
-
-
 })
 
 app.listen(port, () => {

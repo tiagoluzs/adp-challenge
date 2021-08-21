@@ -57,11 +57,16 @@ app.get('/icecream', (req, res) => {
       Promise.all(promsReviews).then((reviews) => {
         for (let i = 0; i < reviews.length; i++) {
           businesses[i].review = JSON.parse(reviews[i]).reviews
-          if (businesses[i].review.length > 1) {
+          if (businesses[i].review.length > 0) {
             businesses[i].review = businesses[i].review[0]
             businesses[i].review = {
               name: businesses[i].review.user.name,
               text: businesses[i].review.text
+            }
+          } else {
+            businesses[i].review = {
+              name: "",
+              text: ""
             }
           }
         }
